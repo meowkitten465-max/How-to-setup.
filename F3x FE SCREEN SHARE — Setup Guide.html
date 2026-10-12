@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>F3x FE SCREEN SHARE — Setup Guide</title>
+<style>
+  :root {
+    --bg: #0d0d0f;
+    --surface: #141418;
+    --surface2: #1c1c22;
+    --border: #2a2a35;
+    --accent: #5b8cff;
+    --accent2: #a78bfa;
+    --green: #4ade80;
+    --yellow: #fbbf24;
+    --red: #f87171;
+    --text: #e8e8f0;
+    --muted: #7070a0;
+    --code-bg: #0a0a0e;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-size: 15px;
+    line-height: 1.65;
+    min-height: 100vh;
+    padding: env(safe-area-inset-top, 0px) 0 env(safe-area-inset-bottom, 0px);
+  }
+
+  /* header */
+  .hero {
+    background: linear-gradient(135deg, #0f0f1a 0%, #1a1030 50%, #0f1a0f 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 48px 24px 36px;
+    text-align: center;
+  }
+  .hero .badge {
+    display: inline-block;
+    background: rgba(91,140,255,0.15);
+    border: 1px solid rgba(91,140,255,0.3);
+    color: var(--accent);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+  }
+  .hero h1 {
+    font-size: clamp(22px, 5vw, 36px);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, #fff 30%, var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 8px;
+  }
+  .hero .sub {
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  .container { max-width: 760px; margin: 0 auto; padding: 0 20px 60px; }
+
+  /* overview chips */
+  .overview {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding: 24px 0 32px;
+  }
+  .chip {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    min-width: 140px;
+  }
+  .chip .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .dot-green { background: var(--green); }
+  .dot-yellow { background: var(--yellow); }
+  .dot-red { background: var(--red); }
+  .dot-blue { background: var(--accent); }
+
+  /* steps */
+  .step {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 32px;
+    position: relative;
+  }
+  .step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: 19px;
+    top: 44px;
+    bottom: -32px;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--border), transparent);
+  }
+  .step-num {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 14px;
+    flex-shrink: 0;
+    color: #fff;
+  }
+  .step-body { flex: 1; padding-top: 8px; }
+  .step-body h2 {
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #fff;
+  }
+  .step-body p { color: #b0b0cc; font-size: 14px; margin-bottom: 10px; }
+
+  /* code blocks */
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+    font-size: 13px;
+    color: #c8d3f5;
+    overflow-x: auto;
+    margin: 10px 0;
+    position: relative;
+  }
+  pre .cmd { color: var(--green); }
+  pre .arg { color: var(--accent2); }
+  pre .cmt { color: var(--muted); }
+  pre .str { color: var(--yellow); }
+
+  /* file card */
+  .file-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin: 10px 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .file-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  .file-icon.lua { background: rgba(91,140,255,0.15); }
+  .file-icon.py  { background: rgba(251,191,36,0.15); }
+  .file-icon.ps  { background: rgba(74,222,128,0.15); }
+  .file-meta { flex: 1; }
+  .file-meta .name { font-weight: 700; font-size: 14px; color: #fff; margin-bottom: 2px; }
+  .file-meta .desc { font-size: 12px; color: var(--muted); }
+
+  /* callout */
+  .callout {
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin: 12px 0;
+    font-size: 13px;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .callout.warn { background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.25); color: #fde68a; }
+  .callout.tip  { background: rgba(74,222,128,0.08); border: 1px solid rgba(74,222,128,0.25); color: #bbf7d0; }
+  .callout.info { background: rgba(91,140,255,0.08); border: 1px solid rgba(91,140,255,0.25); color: #bfdbfe; }
+  .callout-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+
+  /* section divider */
+  .section-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border-top: 1px solid var(--border);
+    padding-top: 28px;
+    margin: 28px 0 20px;
+  }
+
+  /* gui flow */
+  .gui-row {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin: 8px 0;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-size: 14px;
+  }
+  .gui-row .btn-label {
+    background: rgba(91,140,255,0.15);
+    border: 1px solid rgba(91,140,255,0.3);
+    color: var(--accent);
+    border-radius: 6px;
+    padding: 3px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .gui-row .toggle-on {
+    background: rgba(74,222,128,0.15);
+    border: 1px solid rgba(74,222,128,0.3);
+    color: var(--green);
+    border-radius: 6px;
+    padding: 3px 10px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .arrow { color: var(--muted); font-size: 12px; }
+
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #f4f4f8;
+      --surface: #ffffff;
+      --surface2: #f0f0f5;
+      --border: #dddde8;
+      --text: #1a1a2e;
+      --muted: #7070a0;
+      --code-bg: #1a1a2e;
+    }
+    .hero { background: linear-gradient(135deg, #e8e8f8 0%, #ede8f8 50%, #e8f0e8 100%); }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="badge">Setup Guide</div>
+  <h1>F3x FE SCREEN SHARE</h1>
+  <div class="sub">by aiden &nbsp;·&nbsp; PC only &nbsp;·&nbsp; Python + Roblox executor</div>
+</div>
+
+<div class="container">
+
+  <div class="overview">
+    <div class="chip"><span class="dot dot-yellow"></span> Python 3.10+ required</div>
+    <div class="chip"><span class="dot dot-blue"></span> Roblox executor required</div>
+    <div class="chip"><span class="dot dot-green"></span> PC only</div>
+    <div class="chip"><span class="dot dot-red"></span> F3X tool must be equipped</div>
+  </div>
+
+  <!-- FILES NEEDED -->
+  <div class="section-title">Files you need</div>
+
+  <div class="file-card">
+    <div class="file-icon lua">🌙</div>
+    <div class="file-meta">
+      <div class="name">f3x_screenshare.lua</div>
+      <div class="desc">The Roblox exploit script — run this in your executor</div>
+    </div>
+  </div>
+  <div class="file-card">
+    <div class="file-icon py">🐍</div>
+    <div class="file-meta">
+      <div class="name">screen_server.py</div>
+      <div class="desc">Python server — captures your screen and streams it to Roblox</div>
+    </div>
+  </div>
+  <div class="file-card">
+    <div class="file-icon ps">⚡</div>
+    <div class="file-meta">
+      <div class="name">launch.ps1</div>
+      <div class="desc">PowerShell launcher — installs deps and starts the server automatically</div>
+    </div>
+  </div>
+
+  <!-- PART 1 — PYTHON -->
+  <div class="section-title">Part 1 — Python setup</div>
+
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-body">
+      <h2>Install Python 3.10 or newer</h2>
+      <p>Download from <strong>python.org</strong>. During install, tick <strong>"Add Python to PATH"</strong> — this is required.</p>
+      <div class="callout warn">
+        <span class="callout-icon">⚠️</span>
+        If you skip "Add to PATH" the launch script won't find Python and nothing will work.
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-body">
+      <h2>Put all three files in the same folder</h2>
+      <p>Create a folder anywhere — Desktop is fine. Drop <code>f3x_screenshare.lua</code>, <code>screen_server.py</code>, and <code>launch.ps1</code> in it together.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-body">
+      <h2>Run launch.ps1</h2>
+      <p>Right-click <strong>launch.ps1</strong> → <strong>Run with PowerShell</strong>. It will install the required Python packages automatically, then start the screen server.</p>
+      <pre><span class="cmt"># what it installs for you:</span>
+<span class="cmd">websockets</span>   <span class="cmt"># websocket server</span>
+<span class="cmd">mss</span>          <span class="cmt"># screen capture</span>
+<span class="cmd">opencv-python-headless</span>  <span class="cmt"># frame processing</span>
+<span class="cmd">numpy</span>        <span class="cmt"># pixel math</span></pre>
+      <p>When it's ready you'll see:</p>
+      <pre><span class="cmt">[check] mss        ok
+[check] cv2        ok
+[check] numpy      ok
+[check] websockets ok
+
+[ScreenShare] waiting for Lua client on ws://localhost:8080 ...</span></pre>
+      <div class="callout tip">
+        <span class="callout-icon">✅</span>
+        Keep this PowerShell window open the whole time. Closing it kills the server and the stream stops.
+      </div>
+      <div class="callout warn">
+        <span class="callout-icon">⚠️</span>
+        If PowerShell says "execution policy" error, open PowerShell as Administrator and run:<br><br>
+        <code>Set-ExecutionPolicy RemoteSigned -Scope CurrentUser</code><br><br>
+        Then try running launch.ps1 again.
+      </div>
+    </div>
+  </div>
+
+  <!-- PART 2 — ROBLOX -->
+  <div class="section-title">Part 2 — Roblox setup</div>
+
+  <div class="step">
+    <div class="step-num">4</div>
+    <div class="step-body">
+      <h2>Join a Roblox game that has F3X</h2>
+      <p>The game must have the F3X building tool available. Any build-permitted server works.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">5</div>
+    <div class="step-body">
+      <h2>Equip the F3X tool</h2>
+      <p>This is critical — the script finds F3X's <code>SyncAPI</code> by scanning the game. If F3X isn't equipped and loaded, the script errors out. Equip it before running the script.</p>
+      <div class="callout warn">
+        <span class="callout-icon">⚠️</span>
+        Equip F3X <strong>before</strong> running the exploit script. Not after.
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">6</div>
+    <div class="step-body">
+      <h2>Inject and run f3x_screenshare.lua</h2>
+      <p>Open your executor (Madium, Synapse X, Solara, etc.), attach to Roblox, paste the contents of <strong>f3x_screenshare.lua</strong> and execute it. The Rayfield GUI will load with the title <strong>F3x FE SCREEN SHARE</strong>.</p>
+    </div>
+  </div>
+
+  <!-- PART 3 — USING THE GUI -->
+  <div class="section-title">Part 3 — Using the GUI</div>
+
+  <div class="step">
+    <div class="step-num">7</div>
+    <div class="step-body">
+      <h2>Build Screen</h2>
+      <p>In the <strong>Control</strong> tab, click <strong>Build Screen</strong>. This creates 1,296 parts in front of your character using 150 concurrent threads. Wait for the notification that says how many parts were built and the time taken.</p>
+      <div class="gui-row">
+        <span class="btn-label">Build Screen</span>
+        <span class="arrow">→</span>
+        <span>Notification: "1296 parts in X.Xs — enable stream to go live."</span>
+      </div>
+      <div class="callout info">
+        <span class="callout-icon">ℹ️</span>
+        Stand somewhere open before building — the canvas spawns 10 studs up and 80 studs in front of you.
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">8</div>
+    <div class="step-body">
+      <h2>Enable Stream</h2>
+      <p>Toggle <strong>Enable Stream</strong> to ON. This connects to the Python server on <code>ws://127.0.0.1:8080</code> and starts receiving screen frames. The canvas will start displaying your screen in real time.</p>
+      <div class="gui-row">
+        <span class="toggle-on">Enable Stream ●</span>
+        <span class="arrow">→</span>
+        <span>Notification: "Stream Live — Receiving screen at 60fps."</span>
+      </div>
+      <div class="callout warn">
+        <span class="callout-icon">⚠️</span>
+        The Python server (launch.ps1) must already be running before you toggle this on or the connection will fail.
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">9</div>
+    <div class="step-body">
+      <h2>Stop / clean up</h2>
+      <p>Use these controls when you're done:</p>
+      <div class="gui-row">
+        <span class="btn-label">Stop Screen Updates</span>
+        <span class="arrow">→</span>
+        <span>Freezes the canvas frame. Parts stay, stream pauses.</span>
+      </div>
+      <div class="gui-row">
+        <span class="btn-label">Enable Stream → OFF</span>
+        <span class="arrow">→</span>
+        <span>Disconnects from Python server completely.</span>
+      </div>
+      <div class="gui-row">
+        <span class="btn-label">Settings → Remove Canvas</span>
+        <span class="arrow">→</span>
+        <span>Deletes all 1,296 parts from the game.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- TROUBLESHOOTING -->
+  <div class="section-title">Troubleshooting</div>
+
+  <div class="callout warn">
+    <div>
+      <strong>SyncAPI not found</strong><br>
+      You didn't equip F3X before running the script. Equip it, wait 2 seconds, then re-run.
+    </div>
+  </div>
+  <div class="callout warn">
+    <div>
+      <strong>Connection Failed — could not reach Python server</strong><br>
+      launch.ps1 isn't running, or it crashed. Check the PowerShell window for errors and restart it.
+    </div>
+  </div>
+  <div class="callout warn">
+    <div>
+      <strong>Port 8080 in use</strong><br>
+      Another program is using port 8080. Close it, or open screen_server.py and change <code>PORT = 8080</code> to any free port (e.g. 8081). Update <code>WS_URL</code> in the Lua script to match.
+    </div>
+  </div>
+  <div class="callout warn">
+    <div>
+      <strong>Script works but image looks blocky / low quality</strong><br>
+      That's normal — the canvas is 48×27 pixels by design, each pixel is a 3.5×3.5 stud Neon part. It's a low-res screen share, not a monitor.
+    </div>
+  </div>
+  <div class="callout tip">
+    <div>
+      <strong>Stream is slow / laggy</strong><br>
+      The visual refresh rate is limited by Roblox's server round-trip (~20–50ms). This is the engine floor — nothing can push past it. The Python side is already at 60fps.
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
